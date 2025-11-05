@@ -33,11 +33,15 @@ try:
     from .nodes.simple_rotation import SimpleCheckpointRotation
     from .nodes.rotation_with_counter import CheckpointRotationWithCounter
     from .nodes.simple_rotation_direct import CheckpointRotationSimple
+    from .nodes.checkpoint_filename import CheckpointFilename
+    from .nodes.save_with_checkpoint import SaveImageWithCheckpoint
 
     # Node class mappings for ComfyUI
     NODE_CLASS_MAPPINGS = {
-        "CheckpointRotationSimple": CheckpointRotationSimple,  # ⭐ TRY THIS IF BATCH NOT WORKING
-        "CheckpointRotationWithCounter": CheckpointRotationWithCounter,
+        "CheckpointRotationWithCounter": CheckpointRotationWithCounter,  # ⭐ MAIN NODE
+        "SaveImageWithCheckpoint": SaveImageWithCheckpoint,  # ⭐ USE FOR PROPER METADATA
+        "CheckpointFilename": CheckpointFilename,
+        "CheckpointRotationSimple": CheckpointRotationSimple,
         "SimpleCheckpointRotation": SimpleCheckpointRotation,
         "CheckpointRotation": CheckpointRotationNode,
         "BatchIndexCounter": BatchIndexCounter,
@@ -46,8 +50,10 @@ try:
 
     # Display names for nodes in ComfyUI interface
     NODE_DISPLAY_NAME_MAPPINGS = {
-        "CheckpointRotationSimple": "Checkpoint Rotation (Debug)",  # ⭐ DEBUG VERSION
-        "CheckpointRotationWithCounter": "Checkpoint Rotation (Batch)",
+        "CheckpointRotationWithCounter": "Checkpoint Rotation (Batch)",  # ⭐ USE THIS
+        "SaveImageWithCheckpoint": "Save Image (with Checkpoint Info)",  # ⭐ USE THIS
+        "CheckpointFilename": "Checkpoint to Filename",
+        "CheckpointRotationSimple": "Checkpoint Rotation (Debug)",
         "SimpleCheckpointRotation": "Simple Checkpoint Rotation",
         "CheckpointRotation": "Checkpoint Rotation Loader (Advanced)",
         "BatchIndexCounter": "Batch Index Counter",
@@ -56,9 +62,9 @@ try:
 
     # Print success message
     print("\033[92m[ComfyUI] Checkpoint Rotation Node loaded successfully!\033[0m")
-    print(f"  ⭐ Checkpoint Rotation (Debug) - Try this if batch version not working")
-    print(f"  - Checkpoint Rotation (Batch)")
-    print(f"  - Simple Checkpoint Rotation")
+    print(f"  ⭐ Checkpoint Rotation (Batch) - Main node")
+    print(f"  ⭐ Save Image (with Checkpoint Info) - Use this to get correct metadata!")
+    print(f"  - Checkpoint to Filename - Add checkpoint to filename")
     print(f"  Version: {__version__}")
 
 except Exception as e:

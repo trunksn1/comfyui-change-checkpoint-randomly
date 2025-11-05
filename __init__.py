@@ -32,10 +32,12 @@ try:
     from .nodes.batch_counter import BatchIndexCounter, SimpleCounter
     from .nodes.simple_rotation import SimpleCheckpointRotation
     from .nodes.rotation_with_counter import CheckpointRotationWithCounter
+    from .nodes.simple_rotation_direct import CheckpointRotationSimple
 
     # Node class mappings for ComfyUI
     NODE_CLASS_MAPPINGS = {
-        "CheckpointRotationWithCounter": CheckpointRotationWithCounter,  # ⭐ USE THIS ONE!
+        "CheckpointRotationSimple": CheckpointRotationSimple,  # ⭐ TRY THIS IF BATCH NOT WORKING
+        "CheckpointRotationWithCounter": CheckpointRotationWithCounter,
         "SimpleCheckpointRotation": SimpleCheckpointRotation,
         "CheckpointRotation": CheckpointRotationNode,
         "BatchIndexCounter": BatchIndexCounter,
@@ -44,7 +46,8 @@ try:
 
     # Display names for nodes in ComfyUI interface
     NODE_DISPLAY_NAME_MAPPINGS = {
-        "CheckpointRotationWithCounter": "Checkpoint Rotation (Batch)",  # ⭐ RECOMMENDED
+        "CheckpointRotationSimple": "Checkpoint Rotation (Debug)",  # ⭐ DEBUG VERSION
+        "CheckpointRotationWithCounter": "Checkpoint Rotation (Batch)",
         "SimpleCheckpointRotation": "Simple Checkpoint Rotation",
         "CheckpointRotation": "Checkpoint Rotation Loader (Advanced)",
         "BatchIndexCounter": "Batch Index Counter",
@@ -53,9 +56,9 @@ try:
 
     # Print success message
     print("\033[92m[ComfyUI] Checkpoint Rotation Node loaded successfully!\033[0m")
-    print(f"  ⭐ Checkpoint Rotation (Batch) - USE THIS ONE!")
+    print(f"  ⭐ Checkpoint Rotation (Debug) - Try this if batch version not working")
+    print(f"  - Checkpoint Rotation (Batch)")
     print(f"  - Simple Checkpoint Rotation")
-    print(f"  - Checkpoint Rotation Loader (Advanced)")
     print(f"  Version: {__version__}")
 
 except Exception as e:

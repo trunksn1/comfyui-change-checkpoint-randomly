@@ -30,24 +30,28 @@ try:
     # Import node classes using relative imports to avoid conflict with ComfyUI's 'nodes' module
     from .nodes.checkpoint_rotation import CheckpointRotationNode
     from .nodes.batch_counter import BatchIndexCounter, SimpleCounter
+    from .nodes.simple_rotation import SimpleCheckpointRotation
 
     # Node class mappings for ComfyUI
     NODE_CLASS_MAPPINGS = {
-        "CheckpointRotation": CheckpointRotationNode,
-        "BatchIndexCounter": BatchIndexCounter,
-        "SimpleCounter": SimpleCounter,
+        "SimpleCheckpointRotation": SimpleCheckpointRotation,  # Recommended: easiest to use
+        "CheckpointRotation": CheckpointRotationNode,  # Advanced: manual control
+        "BatchIndexCounter": BatchIndexCounter,  # Helper for advanced node
+        "SimpleCounter": SimpleCounter,  # Helper for advanced node
     }
 
     # Display names for nodes in ComfyUI interface
     NODE_DISPLAY_NAME_MAPPINGS = {
-        "CheckpointRotation": "Checkpoint Rotation Loader",
+        "SimpleCheckpointRotation": "Simple Checkpoint Rotation",  # Use this one!
+        "CheckpointRotation": "Checkpoint Rotation Loader (Advanced)",
         "BatchIndexCounter": "Batch Index Counter",
         "SimpleCounter": "Simple Counter",
     }
 
     # Print success message
     print("\033[92m[ComfyUI] Checkpoint Rotation Node loaded successfully!\033[0m")
-    print(f"  - Checkpoint Rotation Loader")
+    print(f"  - Simple Checkpoint Rotation (USE THIS ONE!)")
+    print(f"  - Checkpoint Rotation Loader (Advanced)")
     print(f"  - Batch Index Counter")
     print(f"  - Simple Counter")
     print(f"  Version: {__version__}")

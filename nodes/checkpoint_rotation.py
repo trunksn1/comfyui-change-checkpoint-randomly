@@ -6,13 +6,17 @@ import os
 import sys
 from typing import Dict, List, Tuple, Optional, Any
 
-# Add parent directory to path for imports
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
-
-from utils.path_utils import PathUtils
-from utils.checkpoint_utils import CheckpointUtils
+# Use relative imports to avoid conflicts with ComfyUI's built-in modules
+try:
+    from ..utils.path_utils import PathUtils
+    from ..utils.checkpoint_utils import CheckpointUtils
+except ImportError:
+    # Fallback for direct execution
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if parent_dir not in sys.path:
+        sys.path.insert(0, parent_dir)
+    from utils.path_utils import PathUtils
+    from utils.checkpoint_utils import CheckpointUtils
 
 
 class CheckpointRotationNode:

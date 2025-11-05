@@ -27,9 +27,9 @@ NODE_DISPLAY_NAME_MAPPINGS = {}
 WEB_DIRECTORY = "./web"
 
 try:
-    # Import node classes
-    from nodes.checkpoint_rotation import CheckpointRotationNode
-    from nodes.batch_counter import BatchIndexCounter, SimpleCounter
+    # Import node classes using relative imports to avoid conflict with ComfyUI's 'nodes' module
+    from .nodes.checkpoint_rotation import CheckpointRotationNode
+    from .nodes.batch_counter import BatchIndexCounter, SimpleCounter
 
     # Node class mappings for ComfyUI
     NODE_CLASS_MAPPINGS = {

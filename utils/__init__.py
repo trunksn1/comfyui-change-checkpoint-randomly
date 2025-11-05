@@ -2,7 +2,7 @@
 Utility modules for checkpoint rotation functionality.
 """
 
-from .path_utils import PathUtils
-from .checkpoint_utils import CheckpointUtils
+# This file marks 'utils' as a Python package.
+# The node modules import directly from the utility files.
 
-__all__ = ['PathUtils', 'CheckpointUtils']
+__all__ = []

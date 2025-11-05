@@ -2,7 +2,7 @@
 Custom ComfyUI nodes for checkpoint rotation.
 """
 
-from .checkpoint_rotation import CheckpointRotationNode
-from .batch_counter import BatchIndexCounter, SimpleCounter
+# This file marks 'nodes' as a Python package.
+# The main __init__.py imports directly from the module files.
 
-__all__ = ['CheckpointRotationNode', 'BatchIndexCounter', 'SimpleCounter']
+__all__ = []

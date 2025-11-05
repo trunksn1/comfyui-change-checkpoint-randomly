@@ -38,6 +38,7 @@ class CheckpointRotationWithCounter:
     def __init__(self):
         self.checkpoint_cache = {}
         self.last_checkpoint = None
+        self.counter_offset = 0  # Track offset for reset functionality
 
     @classmethod
     def INPUT_TYPES(cls) -> Dict[str, Any]:
@@ -63,6 +64,10 @@ class CheckpointRotationWithCounter:
                     "step": 1,
                     "tooltip": "Change checkpoint every N images"
                 }),
+                "reset_on_next": ("BOOLEAN", {
+                    "default": False,
+                    "tooltip": "Enable this to reset counter to 0 on next generation, then disable it"
+                }),
             }
         }
 
@@ -77,10 +82,22 @@ class CheckpointRotationWithCounter:
         self,
         counter: int,
         subfolder: str,
-        change_every: int
+        change_every: int,
+        reset_on_next: bool = False
     ) -> Tuple:
         """Load checkpoint based on counter value."""
         try:
+            # Handle reset functionality
+            if reset_on_next:
+                # User wants to reset - store current counter as offset
+                self.counter_offset = counter
+                print(f"\n[CheckpointRotation] ⚠️ RESET ACTIVATED!")
+                print(f"  Counter offset set to {counter}")
+                print(f"  Next images will start from checkpoint 1")
+                print(f"  Remember to DISABLE 'reset_on_next' after this generation!\n")
+
+            # Apply offset to normalize counter
+            normalized_counter = counter - self.counter_offset
             # Get base checkpoints directory
             base_path = PathUtils.get_checkpoints_base_path()
 
@@ -107,7 +124,7 @@ class CheckpointRotationWithCounter:
 
             # Calculate which checkpoint to use
             # This is the KEY: checkpoint only changes when counter crosses a multiple of change_every
-            checkpoint_index = (counter // change_every) % len(checkpoints)
+            checkpoint_index = (normalized_counter // change_every) % len(checkpoints)
             selected_checkpoint = checkpoints[checkpoint_index]
 
             # Get checkpoint name for ComfyUI
@@ -120,30 +137,30 @@ class CheckpointRotationWithCounter:
             model, clip, vae = self._load_checkpoint(checkpoint_name)
 
             # Generate info
-            images_with_current_checkpoint = (counter % change_every) + 1
+            images_with_current_checkpoint = (normalized_counter % change_every) + 1
             checkpoint_num = checkpoint_index + 1
             total_checkpoints = len(checkpoints)
 
             info = (
-                f"Image #{counter}\n"
+                f"Image #{normalized_counter} (raw counter: {counter})\n"
                 f"Checkpoint {checkpoint_num}/{total_checkpoints}\n"
                 f"File: {os.path.basename(selected_checkpoint)}\n"
                 f"Image {images_with_current_checkpoint}/{change_every} with this checkpoint\n"
-                f"Next change at image #{(checkpoint_index + 1) * change_every}"
+                f"Next change at image #{((normalized_counter // change_every) + 1) * change_every}"
             )
 
             # Only print when checkpoint actually changes
             if self.last_checkpoint != checkpoint_name:
                 print(f"\n{'='*60}")
                 print(f"[CheckpointRotation] CHECKPOINT CHANGED!")
-                print(f"  Image #{counter}")
+                print(f"  Image #{normalized_counter} (raw: {counter}, offset: {self.counter_offset})")
                 print(f"  Now using: {os.path.basename(selected_checkpoint)}")
                 print(f"  Checkpoint {checkpoint_num} of {total_checkpoints}")
                 print(f"  Will use this for {change_every} images")
                 print(f"{'='*60}\n")
                 self.last_checkpoint = checkpoint_name
             else:
-                print(f"[CheckpointRotation] Image #{counter} - Still using {os.path.basename(selected_checkpoint)} ({images_with_current_checkpoint}/{change_every})")
+                print(f"[CheckpointRotation] Image #{normalized_counter} - Still using {os.path.basename(selected_checkpoint)} ({images_with_current_checkpoint}/{change_every})")
 
             return (model, clip, vae, info)
 

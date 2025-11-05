@@ -4,7 +4,7 @@ Path utility functions for handling checkpoint directory operations.
 
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 class PathUtils:
@@ -66,7 +66,7 @@ class PathUtils:
         return sorted(subfolders)
 
     @staticmethod
-    def validate_subfolder(base_path: str, subfolder: str) -> tuple[bool, str]:
+    def validate_subfolder(base_path: str, subfolder: str) -> Tuple[bool, str]:
         """
         Validate that a subfolder exists and is accessible.
 

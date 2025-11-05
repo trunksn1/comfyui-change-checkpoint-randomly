@@ -280,11 +280,12 @@ class CheckpointRotationNode:
         return float(kwargs.get('batch_index', 0))
 
 
-# Node registration
-NODE_CLASS_MAPPINGS = {
-    "CheckpointRotation": CheckpointRotationNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "CheckpointRotation": "Checkpoint Rotation Loader"
-}
+# Node registration is handled in main __init__.py
+# Keeping this for reference only
+# NODE_CLASS_MAPPINGS = {
+#     "CheckpointRotation": CheckpointRotationNode
+# }
+#
+# NODE_DISPLAY_NAME_MAPPINGS = {
+#     "CheckpointRotation": "Checkpoint Rotation Loader"
+# }

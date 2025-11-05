@@ -10,43 +10,55 @@ Version: 1.0.0
 
 import os
 import sys
+import traceback
+
+# Version info
+__version__ = "1.0.0"
+__author__ = "Claude AI Assistant"
 
 # Add this directory to Python path for imports
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
-# Import node classes
-from nodes.checkpoint_rotation import CheckpointRotationNode
-from nodes.batch_counter import BatchIndexCounter, SimpleCounter
-
-# Web directory for custom UI (if needed in future)
+# Initialize empty mappings in case of import failure
+NODE_CLASS_MAPPINGS = {}
+NODE_DISPLAY_NAME_MAPPINGS = {}
 WEB_DIRECTORY = "./web"
 
-# Node class mappings for ComfyUI
-NODE_CLASS_MAPPINGS = {
-    "CheckpointRotation": CheckpointRotationNode,
-    "BatchIndexCounter": BatchIndexCounter,
-    "SimpleCounter": SimpleCounter,
-}
+try:
+    # Import node classes
+    from nodes.checkpoint_rotation import CheckpointRotationNode
+    from nodes.batch_counter import BatchIndexCounter, SimpleCounter
 
-# Display names for nodes in ComfyUI interface
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "CheckpointRotation": "Checkpoint Rotation Loader",
-    "BatchIndexCounter": "Batch Index Counter",
-    "SimpleCounter": "Simple Counter",
-}
+    # Node class mappings for ComfyUI
+    NODE_CLASS_MAPPINGS = {
+        "CheckpointRotation": CheckpointRotationNode,
+        "BatchIndexCounter": BatchIndexCounter,
+        "SimpleCounter": SimpleCounter,
+    }
+
+    # Display names for nodes in ComfyUI interface
+    NODE_DISPLAY_NAME_MAPPINGS = {
+        "CheckpointRotation": "Checkpoint Rotation Loader",
+        "BatchIndexCounter": "Batch Index Counter",
+        "SimpleCounter": "Simple Counter",
+    }
+
+    # Print success message
+    print("\033[92m[ComfyUI] Checkpoint Rotation Node loaded successfully!\033[0m")
+    print(f"  - Checkpoint Rotation Loader")
+    print(f"  - Batch Index Counter")
+    print(f"  - Simple Counter")
+    print(f"  Version: {__version__}")
+
+except Exception as e:
+    print("\033[91m[ComfyUI] ERROR: Failed to load Checkpoint Rotation Node!\033[0m")
+    print(f"  Error: {str(e)}")
+    print(f"  Location: {current_dir}")
+    print("\033[91m  Full traceback:\033[0m")
+    traceback.print_exc()
+    print("\033[93m  Please report this error with the traceback above.\033[0m")
 
 # Export for ComfyUI
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', 'WEB_DIRECTORY']
-
-# Version info
-__version__ = "1.0.0"
-__author__ = "Claude AI Assistant"
-
-# Print initialization message
-print("\033[92m[ComfyUI] Checkpoint Rotation Node loaded successfully!\033[0m")
-print(f"  - Checkpoint Rotation Loader")
-print(f"  - Batch Index Counter")
-print(f"  - Simple Counter")
-print(f"  Version: {__version__}")

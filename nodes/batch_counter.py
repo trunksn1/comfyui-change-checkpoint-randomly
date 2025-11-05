@@ -196,13 +196,14 @@ class SimpleCounter:
         cls._value = 0
 
 
-# Node registration
-NODE_CLASS_MAPPINGS = {
-    "BatchIndexCounter": BatchIndexCounter,
-    "SimpleCounter": SimpleCounter
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "BatchIndexCounter": "Batch Index Counter",
-    "SimpleCounter": "Simple Counter"
-}
+# Node registration is handled in main __init__.py
+# Keeping this for reference only
+# NODE_CLASS_MAPPINGS = {
+#     "BatchIndexCounter": BatchIndexCounter,
+#     "SimpleCounter": SimpleCounter
+# }
+#
+# NODE_DISPLAY_NAME_MAPPINGS = {
+#     "BatchIndexCounter": "Batch Index Counter",
+#     "SimpleCounter": "Simple Counter"
+# }

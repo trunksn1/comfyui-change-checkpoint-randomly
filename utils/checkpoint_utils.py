@@ -178,11 +178,13 @@ class CheckpointUtils:
             base_path: Base checkpoints directory
 
         Returns:
-            Checkpoint name suitable for ComfyUI's checkpoint loader
+            Checkpoint name suitable for ComfyUI's checkpoint loader (with forward slashes)
         """
         try:
             # Get relative path from base checkpoints directory
             rel_path = os.path.relpath(checkpoint_path, base_path)
+            # Normalize to forward slashes for ComfyUI compatibility (works on all platforms)
+            rel_path = rel_path.replace(os.sep, '/')
             return rel_path
         except ValueError:
             # If relative path fails, just return basename

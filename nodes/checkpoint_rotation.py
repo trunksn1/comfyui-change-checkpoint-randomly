@@ -156,17 +156,15 @@ class CheckpointRotationNode:
                 print(error_msg)
                 return self._return_error(error_msg)
 
-            # Get checkpoint name for ComfyUI (for loading)
-            checkpoint_name_for_loading = CheckpointUtils.get_checkpoint_name_for_comfyui(
+            # Get checkpoint name for ComfyUI (relative path with forward slashes)
+            # This is used both for loading AND for output to Image Saver Metadata
+            checkpoint_name = CheckpointUtils.get_checkpoint_name_for_comfyui(
                 selected_checkpoint,
                 base_path
             )
 
             # Load the checkpoint
-            model, clip, vae = self._load_checkpoint(checkpoint_name_for_loading)
-
-            # Get basename for output (for metadata and display compatibility)
-            checkpoint_name = os.path.basename(selected_checkpoint)
+            model, clip, vae = self._load_checkpoint(checkpoint_name)
 
             # Generate info string
             rotation_num = batch_index // change_interval
@@ -180,7 +178,8 @@ class CheckpointRotationNode:
             )
 
             self.last_checkpoint_path = selected_checkpoint
-            print(f"[CheckpointRotation] Loaded: {checkpoint_name_for_loading} -> {checkpoint_name}")
+            print(f"[CheckpointRotation] Loaded: {checkpoint_name}")
+            print(f"[CheckpointRotation] Output checkpoint_name for metadata: '{checkpoint_name}'")
 
             return (model, clip, vae, checkpoint_name, info)
 

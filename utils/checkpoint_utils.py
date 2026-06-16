@@ -180,12 +180,44 @@ class CheckpointUtils:
         Returns:
             Checkpoint name suitable for ComfyUI's checkpoint loader (with forward slashes)
         """
+        checkpoint_abs = os.path.abspath(checkpoint_path)
+
+        # The checkpoint may live under any registered checkpoints root, not just
+        # base_path. ComfyUI's get_full_path() resolves a name against all roots,
+        # so we compute the relative name against the root that actually contains
+        # this file (preferring the most specific / longest matching root).
+        candidate_roots = []
         try:
-            # Get relative path from base checkpoints directory
-            rel_path = os.path.relpath(checkpoint_path, base_path)
-            # Normalize to forward slashes for ComfyUI compatibility (works on all platforms)
-            rel_path = rel_path.replace(os.sep, '/')
-            return rel_path
+            import folder_paths
+            candidate_roots.extend(folder_paths.get_folder_paths("checkpoints") or [])
+        except ImportError:
+            pass
+        if base_path:
+            candidate_roots.append(base_path)
+
+        best_rel = None
+        best_root_len = -1
+        for root in candidate_roots:
+            try:
+                root_abs = os.path.abspath(root)
+            except (OSError, ValueError):
+                continue
+            try:
+                if os.path.commonpath([checkpoint_abs, root_abs]) != root_abs:
+                    continue
+            except ValueError:
+                # Different drives (Windows) -> this root can't contain the file.
+                continue
+            if len(root_abs) > best_root_len:
+                best_root_len = len(root_abs)
+                best_rel = os.path.relpath(checkpoint_abs, root_abs)
+
+        if best_rel is not None:
+            return best_rel.replace(os.sep, '/')
+
+        # Fall back to base_path-relative, then basename.
+        try:
+            rel_path = os.path.relpath(checkpoint_abs, base_path)
+            return rel_path.replace(os.sep, '/')
         except ValueError:
-            # If relative path fails, just return basename
             return os.path.basename(checkpoint_path)
